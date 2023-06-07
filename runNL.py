@@ -441,11 +441,11 @@ def generate_sections(improved_outline, model="gpt-3.5-turbo", max_tokens=2000):
 
     # Générer du contenu pour chaque grande section
     for i, section_outline in enumerate(major_sections):
-        full_outline = "Le schéma complet amélioré est donné : "
+        full_outline = "Gezien het volledige verbeterde overzicht: "
         full_outline += '\n'.join(improved_outline)
-        specific_section = "et en se concentrant plus particulièrement sur la section suivante : "
+        specific_section = "en zich specifiek richten op de volgende sectie: "
         specific_section += section_outline
-        prompt =  specific_section + ", veuillez rédiger une section complète qui va en profondeur, fournit des détails et des preuves, et ajoute autant de valeur supplémentaire que possible. Conservez toute hiérarchie que vous trouvez. Ne rédigez jamais la conclusion d'une section à moins que la section elle-même ne soit censée être une conclusion. Texte de la section :"
+        prompt =  specific_section + ", Schrijf alsjeblieft een grondige paragraaf die de diepte ingaat, die details en bewijzen geeft en die zoveel mogelijk extra waarde toevoegt. Bewaar de hiërarchie die je vindt. Schrijf nooit een conclusie van een sectie, tenzij de sectie zelf een conclusie moet zijn. Tekst van de paragraaf:"
         section = generate_content(prompt, model=model, max_tokens=max_tokens)
         sections.append(section)
         #save_to_file(f"section_{i+1}.txt", section)
