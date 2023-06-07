@@ -522,7 +522,7 @@ def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_
 
 
 def main():
-    st.title('Long-form Article Generator with Semantic SEO Understanding')
+    st.title('Générateur d articles longs avec compréhension du référencement sémantique')
     
     st.markdown('''
     Bienvenue dans le générateur d'articles longs ! Cette application s'appuie sur une IA avancée pour créer des articles complets basés sur le sujet que vous lui fournissez. 
@@ -530,8 +530,6 @@ def main():
     Non seulement elle génère des articles, mais elle inclut également une compréhension du référencement sémantique.
 
     Saisissez simplement votre sujet ci-dessous et laissez l'IA faire sa magie !
-    
-    ** Si vous obtenez une erreur (parfois OpenAI est surchargé et ne fonctionne pas), appuyez simplement sur générer à nouveau et il devrait commencer là où il s'est arrêté.
     ''')
    
     topic = st.text_input("Enter topic:", "Acheter à la Fnac en 2050")
