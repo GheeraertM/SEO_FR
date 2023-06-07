@@ -131,7 +131,7 @@ def truncate_to_token_length(input_string, max_tokens=1700):
 @st.cache_data(show_spinner=False)
 def analyze_text(text):
     # Tokenize the text and remove stop words
-    tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('english')]
+    tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('french')]
     # Get the frequency distribution of the tokens
     fdist = FreqDist(tokens)
     # Create a bigram finder and get the top 20 bigrams by keyness
@@ -187,7 +187,7 @@ def analyze_serps(query):
     for index, row in df.iterrows():
         text = row['Article Text']
         # Tokenize the text and remove stop words
-        tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('english') and 'contact' not in word.lower() and 'admin' not in word.lower()]
+        tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('french') and 'contact' not in word.lower() and 'admin' not in word.lower()]
         # Calculate the frequency distribution of the tokens
         fdist = FreqDist(tokens)
         # Calculate the 20 most common words
@@ -276,14 +276,14 @@ def summarize_nlp(df):
     #print(f'Most common quadgrams: {top_quadgrams} ({len(quadgram_freqs)} total quadgrams)')
     #print(f'Most common part-of-speech tags: {all_tags}')
     summary = ""
-    summary += f'Total results: {total_results}\n'
-    summary += f'Average article length: {avg_length} characters\n'
-    summary += f'Average article length: {avg_length} characters\n'
-    summary += f'Median words per article: {median_words}\n'
+    summary += f'Résultats totaux : {total_results}\n'
+    summary += f'Longueur moyenne des articles : {avg_length} characters\n'
+    summary += f'Nombre médian de mots par article : {median_words}\n'
     summary += f'Most common words: {top_words} ({len(word_freqs)} total words)\n'
     summary += f'Most common bigrams: {top_bigrams} ({len(bigram_freqs)} total bigrams)\n'
     summary += f'Most common trigrams: {top_trigrams} ({len(trigram_freqs)} total trigrams)\n'
     summary += f'Most common quadgrams: {top_quadgrams} ({len(quadgram_freqs)} total quadgrams)\n'
+    #summary += f'Tags les plus courants {all_tags} )\n'
     #summary = '\n'.join(summary)
     #st.markdown(str(summary))
     return summary
@@ -306,7 +306,7 @@ def generate_content(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Simulate an exceptionally talented journalist and editor. Given the following instructions, think step by step and produce the best possible output you can."},
+            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible."},
             {"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         n=1,
@@ -333,7 +333,7 @@ def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Simulate an exceptionally talented journalist and editor. Given the following instructions, think step by step and produce the best possible output you can. Return the results in Nicely formatted markdown please."},
+            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible. Renvoyez les résultats en format markdown, s'il vous plaît."},
             {"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         n=1,
@@ -361,8 +361,8 @@ def generate_content3(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Simulate an exceptionally talented investigative journalist and researcher. Given the following text, please write a short paragraph providing only the most important facts and takeaways that can be used later when writing a full analysis or article."},
-            {"role": "user", "content": f"Use the following text to provide the readout: {prompt}"}],
+            {"role": "system", "content": "Simulez un journaliste d'investigation et un chercheur exceptionnellement talentueux. À partir du texte suivant, rédigez un court paragraphe ne reprenant que les faits les plus importants et les éléments à retenir qui pourront être utilisés ultérieurement lors de la rédaction d'une analyse ou d'un article complet."},
+            {"role": "user", "content": f"Utilisez le texte suivant pour fournir la lecture : {prompt}"}],
         max_tokens=max_tokens,
         n=1,
         stop=None,
@@ -382,10 +382,10 @@ def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", ma
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": """You are an expert at Semantic SEO. In particular, you are superhuman at taking  a given NLTK report on a given text corpus compiled from the text of the linked pages returned for a google search.
-            and using it to build a comprehensive set of instructions for an article writer that can be used to inform someone writing a long-form article about a given topic so that they can best fully cover the semantic SEO as shown in NLTK data from the SERP corpus. 
-             Provide the result in well formatted markdown. The goal of this guide is to help the writer make sure that the content they are creating is as comprehensive to the semantic SEO with a focus on what is most imprtant from a semantic SEO perspective."""},
-            {"role": "user", "content": f"Semantic SEO data for the keyword based on the content that ranks on the first page of google for the given keyword query of: {query} and it's related semantic data:  {prompt}"}],
+            {"role": "system", "content": """Vous êtes un expert en référencement sémantique. En particulier, vous êtes surhumain quand il s'agit de prendre un rapport NLTK donné sur un corpus de texte donné compilé à partir du texte des pages liées renvoyées par une recherche Google.
+            et à l'utiliser pour élaborer un ensemble complet d'instructions à l'intention d'un rédacteur d'article qui peut être utilisé pour informer quelqu'un qui écrit un article long sur un sujet donné afin qu'il puisse couvrir au mieux le référencement sémantique tel qu'il apparaît dans les données NLTK du corpus SERP. 
+            Fournir le résultat dans un format markdown bien formaté. Le but de ce guide est d'aider le rédacteur à s'assurer que le contenu qu'il crée est aussi complet que possible pour le référencement sémantique, en mettant l'accent sur ce qui est le plus important du point de vue du référencement sémantique."""},
+            {"role": "user", "content": f"Données de référencement sémantique pour le mot-clé basé sur le contenu qui se classe sur la première page de Google pour la requête de mot-clé donnée : {query} et les données sémantiques qui s'y rapportent :  {prompt}"}],
         max_tokens=max_tokens,
         n=1,
         stop=None,
@@ -407,14 +407,14 @@ def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", ma
 
 @st.cache_data(show_spinner=False)
 def generate_outline(topic, model="gpt-3.5-turbo", max_tokens=1500):
-    prompt = f"Generate an incredibly thorough article outline for the topic: {topic}. Consider all possible angles and be as thorough as possible. Please use Roman Numerals for each section."
+    prompt = f"Créez un plan d'article très complet pour le sujet : {topic}. Envisagez tous les angles possibles et soyez aussi exhaustif que possible. Veuillez utiliser des chiffres romains pour chaque section."
     outline = generate_content(prompt, model=model, max_tokens=max_tokens)
     #save_to_file("outline.txt", outline)
     return outline
 
 @st.cache_data(show_spinner=False)
 def improve_outline(outline, semantic_readout, model="gpt-3.5-turbo", max_tokens=1500):
-    prompt = f"Given the following article outline, please improve and extend this outline significantly as much as you can keeping in mind the SEO keywords and data being provided in our semantic seo readout. Do not include a section about semantic SEO itself, you are using the readout to better inform your creation of the outline. Try and include and extend this as much as you can. Please use Roman Numerals for each section. The goal is as thorough, clear, and useful out line as possible exploring the topic in as much depth as possible. Think step by step before answering. Please take into consideration the semantic seo readout provided here: {semantic_readout} which should help inform some of the improvements you can make, though please also consider additional improvements not included in this semantic seo readout.  Outline to improve: {outline}."
+    prompt = f"A partir du plan d'article suivant, veuillez l'améliorer et l'étendre autant que possible en gardant à l'esprit les mots-clés SEO et les données fournies dans notre lecture sémantique. N'incluez pas de section sur le référencement sémantique lui-même, vous utilisez la lecture pour mieux informer votre création de l'ébauche. Essayez de l'inclure et de l'étendre autant que possible. Veuillez utiliser des chiffres romains pour chaque section. L'objectif est d'obtenir un aperçu aussi complet, clair et utile que possible, en explorant le sujet de manière aussi approfondie que possible. Réfléchissez étape par étape avant de répondre. Veuillez prendre en considération la lecture sémantique du référencement fournie ici : {semantic_readout} qui devrait vous aider à déterminer certaines des améliorations que vous pouvez apporter, bien que vous puissiez également envisager des améliorations supplémentaires qui ne sont pas incluses dans cette lecture sémantique du référencement.  Schéma à améliorer : {outline}."
     improved_outline = generate_content(prompt, model=model, max_tokens=max_tokens)
     #save_to_file("improved_outline.txt", improved_outline)
     return improved_outline
@@ -425,7 +425,7 @@ def improve_outline(outline, semantic_readout, model="gpt-3.5-turbo", max_tokens
 def generate_sections(improved_outline, model="gpt-3.5-turbo", max_tokens=2000):
     sections = []
 
-    # Parse the outline to identify the major sections
+    # Analyser le plan pour identifier les principales sections
     major_sections = []
     current_section = []
     for part in improved_outline:
@@ -437,13 +437,13 @@ def generate_sections(improved_outline, model="gpt-3.5-turbo", max_tokens=2000):
     if current_section:  # Append the last section
         major_sections.append('\n'.join(current_section))
 
-    # Generate content for each major section
+    # Générer du contenu pour chaque grande section
     for i, section_outline in enumerate(major_sections):
-        full_outline = "Given the full improved outline: "
+        full_outline = "Le schéma complet amélioré est donné : "
         full_outline += '\n'.join(improved_outline)
-        specific_section = ", and focusing specifically on the following section: "
+        specific_section = "et en se concentrant plus particulièrement sur la section suivante : "
         specific_section += section_outline
-        prompt =  specific_section + ", please write a thorough section that goes in-depth, provides detail and evidence, and adds as much additional value as possible. Keep whatever hierarchy you find. Never write a conclusion part of a section unless the section itself is supposed to be a conclusion. Section text:"
+        prompt =  specific_section + ", veuillez rédiger une section complète qui va en profondeur, fournit des détails et des preuves, et ajoute autant de valeur supplémentaire que possible. Conservez toute hiérarchie que vous trouvez. Ne rédigez jamais la conclusion d'une section à moins que la section elle-même ne soit censée être une conclusion. Texte de la section :"
         section = generate_content(prompt, model=model, max_tokens=max_tokens)
         sections.append(section)
         #save_to_file(f"section_{i+1}.txt", section)
@@ -451,7 +451,7 @@ def generate_sections(improved_outline, model="gpt-3.5-turbo", max_tokens=2000):
 
 @st.cache_data(show_spinner=False)
 def improve_section(section, i, model="gpt-3.5-turbo", max_tokens=1500):
-    prompt = f"Given the following section of the article: {section}, please make thorough and improvements to this section. Keep whatever hierarchy you find. Only provide the updated section, not the text of your recommendation, just make the changes. Always provide the updated section in valid Markdown please. Updated Section with improvements:"
+    prompt = f"Étant donné la section suivante de l'article : {section}, veuillez apporter des améliorations à cette section. Conservez toute hiérarchie que vous trouvez. Fournissez uniquement la section mise à jour, pas le texte de votre recommandation, faites simplement les changements. Fournissez toujours la section mise à jour en Markdown valide s'il vous plaît. Section mise à jour avec améliorations :"
     prompt = str(prompt)
     improved_section = generate_content2(prompt, model=model, max_tokens=max_tokens)
     #st.markdown(improved_section)
@@ -482,27 +482,27 @@ def concatenate_files(file_names, output_file_name):
 @st.cache_data(show_spinner=False)
 def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_tokens_section=2000, max_tokens_improve_section=4000):
     status = st.empty()
-    status.text('Analyzing SERPs...')
+    status.text('Analyse SERPs...')
     
     query = topic
     results = analyze_serps(query)
     summary = summarize_nlp(results)
 
-    status.text('Generating semantic SEO readout...')
+    status.text('Générer une lecture sémantique du SEO...')
     semantic_readout = generate_semantic_improvements_guide(topic, summary,  model=model, max_tokens=max_tokens_outline)
     
     
-    status.text('Generating initial outline...')
+    status.text('Création d une première ébauche...')
     initial_outline = generate_outline(topic, model=model, max_tokens=max_tokens_outline)
 
-    status.text('Improving the initial outline...')
+    status.text('Améliorer l ébauche initiale...')
     improved_outline = improve_outline(initial_outline, semantic_readout, model=model, max_tokens=1500)
     #st.markdown(improved_outline,unsafe_allow_html=True)
     
-    status.text('Generating sections based on the improved outline...')
+    status.text('Générer des sections sur la base du schéma amélioré...')
     sections = generate_sections(improved_outline, model=model, max_tokens=max_tokens_section)
 
-    status.text('Improving sections...')
+    status.text('Amélioration des sections...')
     
     improved_sections = []
     for i, section in enumerate(sections):
@@ -513,7 +513,7 @@ def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_
 
 
 
-    status.text('Finished')
+    status.text('Fini')
     final_content = '\n'.join(improved_sections)
     #st.markdown(final_content,unsafe_allow_html=True)
    
@@ -525,16 +525,16 @@ def main():
     st.title('Long-form Article Generator with Semantic SEO Understanding')
     
     st.markdown('''
-    Welcome to the long-form article generator! This application leverages advanced AI to create comprehensive articles based on the topic you provide. 
+    Bienvenue dans le générateur d'articles longs ! Cette application s'appuie sur une IA avancée pour créer des articles complets basés sur le sujet que vous lui fournissez. 
 
-    Not only does it generate articles, but it also includes a Semantic SEO understanding. This means it takes into consideration the semantic context and relevance of your topic, based on current search engine results.
+    Non seulement elle génère des articles, mais elle inclut également une compréhension du référencement sémantique.
 
-    Just input your topic below and let the AI do its magic!
+    Saisissez simplement votre sujet ci-dessous et laissez l'IA faire sa magie !
     
-    ** If you get an error, (sometimes OpenAI will be overloaded and not work), just press generate again and it should start where it left off.
+    ** Si vous obtenez une erreur (parfois OpenAI est surchargé et ne fonctionne pas), appuyez simplement sur générer à nouveau et il devrait commencer là où il s'est arrêté.
     ''')
    
-    topic = st.text_input("Enter topic:", "Digital PR tips to earn media coverage in 2023")
+    topic = st.text_input("Enter topic:", "Acheter à la Fnac en 2050")
 
     # Get user input for API key
     user_api_key = st.text_input("Enter your OpenAI API key")
