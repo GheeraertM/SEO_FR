@@ -445,7 +445,7 @@ def generate_sections(improved_outline, model="gpt-3.5-turbo", max_tokens=2000):
         full_outline += '\n'.join(improved_outline)
         specific_section = "en zich specifiek richten op de volgende sectie: "
         specific_section += section_outline
-        prompt =  specific_section + ", Schrijf alsjeblieft een grondige paragraaf die de diepte ingaat, die details en bewijzen geeft en die zoveel mogelijk extra waarde toevoegt. Bewaar de hiërarchie die je vindt. Schrijf nooit een conclusie van een sectie, tenzij de sectie zelf een conclusie moet zijn. Tekst van de paragraaf:"
+        prompt =  specific_section + ", schrijf alsjeblieft een grondige paragraaf die de diepte ingaat, die details en bewijzen geeft en die zoveel mogelijk extra waarde toevoegt. Bewaar de hiërarchie die je vindt. Schrijf nooit een conclusie van een sectie, tenzij de sectie zelf een conclusie moet zijn. Tekst van de paragraaf:"
         section = generate_content(prompt, model=model, max_tokens=max_tokens)
         sections.append(section)
         #save_to_file(f"section_{i+1}.txt", section)
@@ -453,7 +453,7 @@ def generate_sections(improved_outline, model="gpt-3.5-turbo", max_tokens=2000):
 
 @st.cache_data(show_spinner=False)
 def improve_section(section, i, model="gpt-3.5-turbo", max_tokens=1500):
-    prompt = f"Étant donné la section suivante de l'article : {section}, veuillez apporter des améliorations à cette section. Conservez toute hiérarchie que vous trouvez. Fournissez uniquement la section mise à jour, pas le texte de votre recommandation, faites simplement les changements. Fournissez toujours la section mise à jour en Markdown valide s'il vous plaît. Section mise à jour avec améliorations :"
+    prompt = f"Gezien het volgende gedeelte van het artikel: {section}, breng verbeteringen aan in deze sectie. Bewaar de hiërarchie die je vindt. Geef alleen de bijgewerkte sectie, niet de tekst van je aanbeveling, maak alleen de wijzigingen. Geef de bijgewerkte sectie altijd in geldige Markdown. Bijgewerkte sectie met verbeteringen :"
     prompt = str(prompt)
     improved_section = generate_content2(prompt, model=model, max_tokens=max_tokens)
     #st.markdown(improved_section)
@@ -537,7 +537,7 @@ def main():
     topic = st.text_input("Enter topic:", "Kopen in Fnac in 2050")
 
     # Get user input for API key
-    user_api_key = st.text_input("Entrez votre clé API OpenAI")
+    user_api_key = st.text_input("Voer uw wachtwoord in voor API OpenAI")
 
     if st.button('Generate Content'):
         if user_api_key:
