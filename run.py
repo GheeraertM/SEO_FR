@@ -64,9 +64,11 @@ def scrape_google(search):
 
     # Prepare the actor input
     run_input = {
+        "countryCode": "be",
         "csvFriendlyOutput": False,
         "customDataFunction": "async ({ input, $, request, response, html }) => {\n  return {\n    pageTitle: $('title').text(),\n  };\n};",
         "includeUnfilteredResults": False,
+        "languageCode": "fr",
         "maxPagesPerQuery": 1,
         "mobileResults": False,
         "queries": search,
@@ -522,7 +524,7 @@ def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_
 
 
 def main():
-    st.title('Générateur d articles longs avec compréhension du référencement sémantique')
+    st.title('Générateur d U+00B4 articles longs avec compréhension du référencement sémantique')
     
     st.markdown('''
     Bienvenue dans le générateur d'articles longs ! Cette application s'appuie sur une IA avancée pour créer des articles complets basés sur le sujet que vous lui fournissez. 
@@ -535,7 +537,7 @@ def main():
     topic = st.text_input("Enter topic:", "Acheter à la Fnac en 2050")
 
     # Get user input for API key
-    user_api_key = st.text_input("Enter your OpenAI API key")
+    user_api_key = st.text_input("Entrez votre clé API OpenAI")
 
     if st.button('Generate Content'):
         if user_api_key:
