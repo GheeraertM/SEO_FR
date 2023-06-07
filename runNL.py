@@ -133,7 +133,7 @@ def truncate_to_token_length(input_string, max_tokens=1700):
 @st.cache_data(show_spinner=False)
 def analyze_text(text):
     # Tokenize the text and remove stop words
-    tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('french')]
+    tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('dutch')]
     # Get the frequency distribution of the tokens
     fdist = FreqDist(tokens)
     # Create a bigram finder and get the top 20 bigrams by keyness
@@ -189,7 +189,7 @@ def analyze_serps(query):
     for index, row in df.iterrows():
         text = row['Article Text']
         # Tokenize the text and remove stop words
-        tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('french') and 'contact' not in word.lower() and 'admin' not in word.lower()]
+        tokens = [word.lower() for word in word_tokenize(text) if word.isalpha() and word.lower() not in stopwords.words('dutch') and 'contact' not in word.lower() and 'admin' not in word.lower()]
         # Calculate the frequency distribution of the tokens
         fdist = FreqDist(tokens)
         # Calculate the 20 most common words
@@ -308,7 +308,7 @@ def generate_content(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible."},
+            {"role": "system", "content": "Simuleer een uitzonderlijk getalenteerde journalist en redacteur. Denk stap voor stap na over de volgende instructies en produceer de best mogelijke output."},
             {"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         n=1,
@@ -335,7 +335,7 @@ def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible. Renvoyez les résultats en format markdown, s'il vous plaît."},
+            {"role": "system", "content": "Simuleer een uitzonderlijk getalenteerde journalist en redacteur. Denk stap voor stap na over de volgende instructies en produceer de best mogelijke output. Stuur de resultaten terug in mooi opgemaakte markdown."},
             {"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         n=1,
@@ -363,8 +363,8 @@ def generate_content3(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Simulez un journaliste d'investigation et un chercheur exceptionnellement talentueux. À partir du texte suivant, rédigez un court paragraphe ne reprenant que les faits les plus importants et les éléments à retenir qui pourront être utilisés ultérieurement lors de la rédaction d'une analyse ou d'un article complet."},
-            {"role": "user", "content": f"Utilisez le texte suivant pour fournir la lecture : {prompt}"}],
+            {"role": "system", "content": "Simuleer een uitzonderlijk getalenteerde onderzoeksjournalist en onderzoeker. Schrijf bij de volgende tekst een korte paragraaf met alleen de belangrijkste feiten en aanknopingspunten die je later kunt gebruiken bij het schrijven van een volledige analyse of artikel."},
+            {"role": "user", "content": f"Gebruik de volgende tekst om de uitlezing te geven: {prompt}"}],
         max_tokens=max_tokens,
         n=1,
         stop=None,
@@ -384,10 +384,10 @@ def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", ma
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
-            {"role": "system", "content": """Vous êtes un expert en référencement sémantique. En particulier, vous êtes surhumain quand il s'agit de prendre un rapport NLTK donné sur un corpus de texte donné compilé à partir du texte des pages liées renvoyées par une recherche Google.
-            et à l'utiliser pour élaborer un ensemble complet d'instructions à l'intention d'un rédacteur d'article qui peut être utilisé pour informer quelqu'un qui écrit un article long sur un sujet donné afin qu'il puisse couvrir au mieux le référencement sémantique tel qu'il apparaît dans les données NLTK du corpus SERP. 
-            Fournir le résultat dans un format markdown bien formaté. Le but de ce guide est d'aider le rédacteur à s'assurer que le contenu qu'il crée est aussi complet que possible pour le référencement sémantique, en mettant l'accent sur ce qui est le plus important du point de vue du référencement sémantique."""},
-            {"role": "user", "content": f"Données de référencement sémantique pour le mot-clé basé sur le contenu qui se classe sur la première page de Google pour la requête de mot-clé donnée : {query} et les données sémantiques qui s'y rapportent :  {prompt}"}],
+            {"role": "system", "content": """Je bent een expert in semantische SEO. In het bijzonder ben je bovenmenselijk in het nemen van een bepaald NLTK rapport over een bepaald tekstcorpus samengesteld uit de tekst van de gelinkte pagina's die terugkomen bij een google zoekopdracht.
+            en het te gebruiken om een uitgebreide set instructies te maken voor een schrijver van een artikel, die kan worden gebruikt om iemand te informeren die een long-form artikel schrijft over een bepaald onderwerp, zodat ze de semantische SEO zoals weergegeven in NLTK-gegevens van het SERP-corpus zo goed mogelijk kunnen behandelen. 
+             Geef het resultaat in goed geformatteerde markdown. Het doel van deze gids is om de schrijver te helpen ervoor te zorgen dat de inhoud die ze maken zo volledig mogelijk is voor de semantische SEO met een focus op wat het meest belangrijk is vanuit een semantisch SEO-perspectief."""},
+            {"role": "user", "content": f"Semantische SEO-gegevens voor het trefwoord op basis van de inhoud die op de eerste pagina van google staat voor het gegeven trefwoord zoekopdracht van: {query} en zijn gerelateerde semantische gegevens: {prompt}"}],
         max_tokens=max_tokens,
         n=1,
         stop=None,
@@ -409,14 +409,14 @@ def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", ma
 
 @st.cache_data(show_spinner=False)
 def generate_outline(topic, model="gpt-3.5-turbo", max_tokens=1500):
-    prompt = f"Créez un plan d'article très complet pour le sujet : {topic}. Envisagez tous les angles possibles et soyez aussi exhaustif que possible. Veuillez utiliser des chiffres romains pour chaque section."
+    prompt = f"Maak een ongelooflijk grondig artikeloverzicht voor het onderwerp: {topic}. Overweeg alle mogelijke invalshoeken en wees zo grondig mogelijk. Gebruik Romeinse cijfers voor elk onderdeel."
     outline = generate_content(prompt, model=model, max_tokens=max_tokens)
     #save_to_file("outline.txt", outline)
     return outline
 
 @st.cache_data(show_spinner=False)
 def improve_outline(outline, semantic_readout, model="gpt-3.5-turbo", max_tokens=1500):
-    prompt = f"A partir du plan d'article suivant, veuillez l'améliorer et l'étendre autant que possible en gardant à l'esprit les mots-clés SEO et les données fournies dans notre lecture sémantique. N'incluez pas de section sur le référencement sémantique lui-même, vous utilisez la lecture pour mieux informer votre création de l'ébauche. Essayez de l'inclure et de l'étendre autant que possible. Veuillez utiliser des chiffres romains pour chaque section. L'objectif est d'obtenir un aperçu aussi complet, clair et utile que possible, en explorant le sujet de manière aussi approfondie que possible. Réfléchissez étape par étape avant de répondre. Veuillez prendre en considération la lecture sémantique du référencement fournie ici : {semantic_readout} qui devrait vous aider à déterminer certaines des améliorations que vous pouvez apporter, bien que vous puissiez également envisager des améliorations supplémentaires qui ne sont pas incluses dans cette lecture sémantique du référencement.  Schéma à améliorer : {outline}."
+    prompt = f"Als je het volgende artikel schetst, verbeter en breid dit dan zo veel mogelijk uit, rekening houdend met de SEO-zoekwoorden en gegevens die worden verstrekt in onze semantische SEO-uitlezing. Voeg geen sectie toe over semantische SEO zelf, je gebruikt de uitlezing om je beter te informeren bij het maken van het overzicht. Probeer dit zoveel mogelijk op te nemen en uit te breiden. Gebruik Romeinse cijfers voor elke sectie. Het doel is een zo grondig, duidelijk en nuttig mogelijke uitlijning die het onderwerp zo diep mogelijk verkent. Denk stap voor stap na voordat je antwoordt. Houd rekening met de semantische seo-uitlezing die hier wordt gegeven: {semantic_readout} die zou moeten helpen bij het bepalen van de verbeteringen die je kunt aanbrengen, maar denk ook aan extra verbeteringen die niet in deze semantische seo readout zijn opgenomen.  Overzicht om te verbeteren: {outline}."
     improved_outline = generate_content(prompt, model=model, max_tokens=max_tokens)
     #save_to_file("improved_outline.txt", improved_outline)
     return improved_outline
@@ -524,17 +524,17 @@ def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_
 
 
 def main():
-    st.title('Générateur d U+00B4 articles longs avec compréhension du référencement sémantique')
+    st.title('Artikelgenerator met semantische SEO-begrip')
     
     st.markdown('''
-    Bienvenue dans le générateur d'articles longs ! Cette application s'appuie sur une IA avancée pour créer des articles complets basés sur le sujet que vous lui fournissez. 
+     Welkom bij de artikelgenerator voor lange artikelen! Deze applicatie maakt gebruik van geavanceerde AI om uitgebreide artikelen te maken op basis van het onderwerp dat je opgeeft. 
 
-    Non seulement elle génère des articles, mais elle inclut également une compréhension du référencement sémantique.
+    Het genereert niet alleen artikelen, maar het bevat ook een Semantisch SEO begrip. Dit betekent dat het rekening houdt met de semantische context en relevantie van je onderwerp, gebaseerd op de huidige zoekmachineresultaten.
 
-    Saisissez simplement votre sujet ci-dessous et laissez l'IA faire sa magie !
+    Voer je onderwerp hieronder in en laat de AI zijn magie doen!
     ''')
    
-    topic = st.text_input("Enter topic:", "Acheter à la Fnac en 2050")
+    topic = st.text_input("Enter topic:", "Kopen in Fnac in 2050")
 
     # Get user input for API key
     user_api_key = st.text_input("Entrez votre clé API OpenAI")
