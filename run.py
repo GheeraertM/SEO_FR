@@ -524,7 +524,7 @@ def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_
 
 
 def main():
-    st.title('Générateur d U+00B4 articles longs avec compréhension du référencement sémantique')
+    st.title('Générateur d articles longs avec compréhension du référencement sémantique')
     
     st.markdown('''
     Bienvenue dans le générateur d'articles longs ! Cette application s'appuie sur une IA avancée pour créer des articles complets basés sur le sujet que vous lui fournissez. 
