@@ -534,7 +534,7 @@ def main():
     Voer je onderwerp hieronder in en laat de AI zijn magie doen!
     ''')
    
-    topic = st.text_input("Enter topic:", "Kopen in Fnac in 2050")
+    topic = st.text_input("Enter topic:", "Kopen in 2050")
 
     # Get user input for API key
     user_api_key = st.text_input("Voer uw wachtwoord in voor API OpenAI")
