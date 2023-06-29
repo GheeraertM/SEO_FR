@@ -534,7 +534,7 @@ def main():
     Saisissez simplement votre sujet ci-dessous et laissez l'IA faire sa magie !
     ''')
    
-    topic = st.text_input("Enter topic:", "Acheter à la Fnac en 2050")
+    topic = st.text_input("Enter topic:", "Acheter en 2050")
 
     # Get user input for API key
     user_api_key = st.text_input("Entrez votre clé API OpenAI")
