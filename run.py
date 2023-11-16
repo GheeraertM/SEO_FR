@@ -1,6 +1,3 @@
-# Installe la version d'OpenAI >= 1.0.0
-!pip install 'openai>=1.0.0'
-
 # Import necessary libraries
 import requests
 import os
