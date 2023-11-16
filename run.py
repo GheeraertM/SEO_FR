@@ -27,7 +27,7 @@ from transformers import GPT2Tokenizer
 import json
 
 # Installation de la version spécifique de openai
-!pip install openai>=1.0.0
+pip install 'openai>=1.0.0'
 
 # Initialisation du tokenizer GPT-2
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
