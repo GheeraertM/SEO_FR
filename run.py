@@ -15,7 +15,7 @@ import collections
 from nltk.collocations import TrigramAssocMeasures, TrigramCollocationFinder
 from nltk.collocations import QuadgramAssocMeasures, QuadgramCollocationFinder
 import time
-import openai==0.28
+import openai=0.28
 import pandas as pd
 import re
 import streamlit as st
