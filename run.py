@@ -16,7 +16,7 @@ from nltk.collocations import TrigramAssocMeasures, TrigramCollocationFinder
 from nltk.collocations import QuadgramAssocMeasures, QuadgramCollocationFinder
 import time
 from openai import OpenAI
-client = OpenAI(api_key="")
+#client = OpenAI(api_key="")
 import pandas as pd
 import re
 import streamlit as st
@@ -444,9 +444,9 @@ def main():
     topic = st.text_input("Enter topic:", "Acheter en 2050")
 
     # Get user input for API key
-    user_api_key = st.text_input("Entrez votre clé API OpenAI")
+    client = st.text_input("Entrez votre clé API OpenAI")
     if st.button('Generate Content'):
-        if user_api_key:
+        if client:
             with st.spinner("Generating content..."):
                 final_draft = generate_article(topic)
         else:
