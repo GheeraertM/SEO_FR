@@ -16,7 +16,7 @@ from nltk.collocations import TrigramAssocMeasures, TrigramCollocationFinder
 from nltk.collocations import QuadgramAssocMeasures, QuadgramCollocationFinder
 import time
 from openai import OpenAI
-openai.api_key = OpenAI(api_key="")
+client = OpenAI(api_key="")
 import pandas as pd
 import re
 import streamlit as st
