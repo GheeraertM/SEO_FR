@@ -15,7 +15,8 @@ import collections
 from nltk.collocations import TrigramAssocMeasures, TrigramCollocationFinder
 from nltk.collocations import QuadgramAssocMeasures, QuadgramCollocationFinder
 import time
-import openai
+from openai import OpenAI
+client = OpenAI(api_key=user_api_key)
 import pandas as pd
 import re
 import streamlit as st
@@ -305,20 +306,17 @@ def generate_content(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature
     #st.write(prompt)
     #for i in range(3):
         #try:
-    gpt_response = openai.ChatCompletion.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible."},
-            {"role": "user", "content": prompt}],
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=temperature,
-    )
+    gpt_response = client.chat.completions.create(model=model,
+    messages=[
+        {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible."},
+        {"role": "user", "content": prompt}],
+    max_tokens=max_tokens,
+    n=1,
+    stop=None,
+    temperature=temperature)
     response = gpt_response['choices'][0]['message']['content'].strip()
     response = response
     return response.strip().split('\n')
-
         #except:
             #st.write(f"Attempt {i+1} failed, retrying...")
             #time.sleep(3)  # Wait for 3 seconds before next try
@@ -332,20 +330,17 @@ def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     #st.write(prompt)
     #for i in range(3):
         #try:
-    gpt_response = openai.ChatCompletion.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible. Renvoyez les résultats en format markdown, s'il vous plaît."},
-            {"role": "user", "content": prompt}],
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=temperature,
-    )
+    gpt_response = client.chat.completions.create(model=model,
+    messages=[
+        {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible. Renvoyez les résultats en format markdown, s'il vous plaît."},
+        {"role": "user", "content": prompt}],
+    max_tokens=max_tokens,
+    n=1,
+    stop=None,
+    temperature=temperature)
     response = gpt_response['choices'][0]['message']['content'].strip()
     response = response
     return response
-
         #except:
             #st.write(f"Attempt {i+1} failed, retrying...")
             #time.sleep(3)  # Wait for 3 seconds before next try
@@ -360,19 +355,17 @@ def generate_content3(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     #st.write(prompt)
     #for i in range(3):
         #try:
-    gpt_response = openai.ChatCompletion.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": "Simulez un journaliste d'investigation et un chercheur exceptionnellement talentueux. À partir du texte suivant, rédigez un court paragraphe ne reprenant que les faits les plus importants et les éléments à retenir qui pourront être utilisés ultérieurement lors de la rédaction d'une analyse ou d'un article complet."},
-            {"role": "user", "content": f"Utilisez le texte suivant pour fournir la lecture : {prompt}"}],
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=temperature,
-    )
+    gpt_response = client.chat.completions.create(model=model,
+    messages=[
+        {"role": "system", "content": "Simulez un journaliste d'investigation et un chercheur exceptionnellement talentueux. À partir du texte suivant, rédigez un court paragraphe ne reprenant que les faits les plus importants et les éléments à retenir qui pourront être utilisés ultérieurement lors de la rédaction d'une analyse ou d'un article complet."},
+        {"role": "user", "content": f"Utilisez le texte suivant pour fournir la lecture : {prompt}"}],
+    max_tokens=max_tokens,
+    n=1,
+    stop=None,
+    temperature=temperature)
     response = gpt_response['choices'][0]['message']['content'].strip()
     response = response
-    return response    
+    return response       
     
     
     
@@ -381,18 +374,16 @@ def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", ma
     prompt = truncate_to_token_length(prompt,1500)
     #for i in range(3):
         #try:
-    gpt_response = openai.ChatCompletion.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": """Vous êtes un expert en référencement sémantique. En particulier, vous êtes surhumain quand il s'agit de prendre un rapport NLTK donné sur un corpus de texte donné compilé à partir du texte des pages liées renvoyées par une recherche Google.
-            et à l'utiliser pour élaborer un ensemble complet d'instructions à l'intention d'un rédacteur d'article qui peut être utilisé pour informer quelqu'un qui écrit un article long sur un sujet donné afin qu'il puisse couvrir au mieux le référencement sémantique tel qu'il apparaît dans les données NLTK du corpus SERP. 
-            Fournir le résultat dans un format markdown bien formaté. Le but de ce guide est d'aider le rédacteur à s'assurer que le contenu qu'il crée est aussi complet que possible pour le référencement sémantique, en mettant l'accent sur ce qui est le plus important du point de vue du référencement sémantique."""},
-            {"role": "user", "content": f"Données de référencement sémantique pour le mot-clé basé sur le contenu qui se classe sur la première page de Google pour la requête de mot-clé donnée : {query} et les données sémantiques qui s'y rapportent :  {prompt}"}],
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=temperature,
-    )
+    gpt_response = client.chat.completions.create(model=model,
+    messages=[
+        {"role": "system", "content": """Vous êtes un expert en référencement sémantique. En particulier, vous êtes surhumain quand il s'agit de prendre un rapport NLTK donné sur un corpus de texte donné compilé à partir du texte des pages liées renvoyées par une recherche Google.
+        et à l'utiliser pour élaborer un ensemble complet d'instructions à l'intention d'un rédacteur d'article qui peut être utilisé pour informer quelqu'un qui écrit un article long sur un sujet donné afin qu'il puisse couvrir au mieux le référencement sémantique tel qu'il apparaît dans les données NLTK du corpus SERP. 
+        Fournir le résultat dans un format markdown bien formaté. Le but de ce guide est d'aider le rédacteur à s'assurer que le contenu qu'il crée est aussi complet que possible pour le référencement sémantique, en mettant l'accent sur ce qui est le plus important du point de vue du référencement sémantique."""},
+        {"role": "user", "content": f"Données de référencement sémantique pour le mot-clé basé sur le contenu qui se classe sur la première page de Google pour la requête de mot-clé donnée : {query} et les données sémantiques qui s'y rapportent :  {prompt}"}],
+    max_tokens=max_tokens,
+    n=1,
+    stop=None,
+    temperature=temperature)
     response = gpt_response['choices'][0]['message']['content'].strip()
     st.header("Semantic Improvements Guide")
     st.markdown(response,unsafe_allow_html=True)
@@ -538,10 +529,8 @@ def main():
 
     # Get user input for API key
     user_api_key = st.text_input("Entrez votre clé API OpenAI")
-
     if st.button('Generate Content'):
         if user_api_key:
-            openai.api_key = user_api_key
             with st.spinner("Generating content..."):
                 final_draft = generate_article(topic)
                 #st.markdown(final_draft)
