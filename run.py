@@ -25,11 +25,10 @@ import transformers
 from transformers import GPT2Tokenizer
 
 import json
-
-# Initialisation du tokenizer GPT-2
+#openai.api_key = openai.api_key = os.environ['openai_api_key']
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
-# Téléchargement des ressources nécessaires pour NLTK
+
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
@@ -44,6 +43,7 @@ nltk.download('gutenberg')
 nltk.download('genesis')
 nltk.download('trigram_collocations')
 nltk.download('quadgram_collocations')
+
 
 # Define a function to scrape Google search results and create a dataframe
 from apify_client import ApifyClient
@@ -290,19 +290,41 @@ def summarize_nlp(df):
     #st.markdown(str(summary))
     return summary
 
+
+
+
+
+#def save_to_file(filename, content):
+    #with open(filename, 'w') as f:
+        #f.write("\n".join(content))
+
+
 @st.cache_data(show_spinner=False)
-def generate_content(prompt, model="text-davinci-003", max_tokens=1000, temperature=0.4):
-    prompt = truncate_to_token_length(prompt, 2500)
-    gpt_response = openai.Completion.create(
+def generate_content(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature=0.4):
+    prompt = truncate_to_token_length(prompt,2500)
+    #st.write(prompt)
+    #for i in range(3):
+        #try:
+    gpt_response = openai.ChatCompletion.create(
         model=model,
-        prompt=prompt,
+        messages=[
+            {"role": "system", "content": "Simulez un journaliste et un rédacteur en chef exceptionnellement talentueux. À partir des instructions suivantes, réfléchissez étape par étape et produisez le meilleur résultat possible."},
+            {"role": "user", "content": prompt}],
         max_tokens=max_tokens,
         n=1,
         stop=None,
         temperature=temperature,
     )
-    response = gpt_response['choices'][0]['text'].strip()
+    response = gpt_response['choices'][0]['message']['content'].strip()
+    response = response
     return response.strip().split('\n')
+
+        #except:
+            #st.write(f"Attempt {i+1} failed, retrying...")
+            #time.sleep(3)  # Wait for 3 seconds before next try
+
+    #st.write("OpenAI is currently overloaded, please try again later.")
+    #return None
 
 @st.cache_data(show_spinner=False)
 def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature=0.4):
@@ -324,6 +346,14 @@ def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     response = response
     return response
 
+        #except:
+            #st.write(f"Attempt {i+1} failed, retrying...")
+            #time.sleep(3)  # Wait for 3 seconds before next try
+
+    #st.write("OpenAI is currently overloaded, please try again later.")
+    #return None
+
+    
 @st.cache_data(show_spinner=False)
 def generate_content3(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature=0.4):
     prompt = truncate_to_token_length(prompt,2500)
