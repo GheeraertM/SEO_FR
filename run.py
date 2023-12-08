@@ -444,9 +444,9 @@ def main():
     topic = st.text_input("Enter topic:", "Acheter en 2050")
 
     # Get user input for API key
-    client = st.text_input("Entrez votre clé API OpenAI")
+    user_api_key = st.text_input("Entrez votre clé API OpenAI")
     if st.button('Generate Content'):
-        if client:
+        if user_api_key:
             with st.spinner("Generating content..."):
                 final_draft = generate_article(topic)
         else:
