@@ -25,17 +25,42 @@ import transformers
 from transformers import GPT2Tokenizer
 
 import json
+#openai.api_key = openai.api_key = os.environ['openai_api_key']
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
-# Initialize the ApifyClient with your API token
-APIFY_API_KEY = 'apify_api_L01dAtczculILhxDMjpfCKYskPS7iJ2HQKTO'
-client = ApifyClient(APIFY_API_KEY)
+
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('tagsets')
+nltk.download('words')
+nltk.download('maxent_ne_chunker')
+nltk.download('vader_lexicon')
+nltk.download('inaugural')
+nltk.download('webtext')
+nltk.download('treebank')
+nltk.download('gutenberg')
+nltk.download('genesis')
+nltk.download('trigram_collocations')
+nltk.download('quadgram_collocations')
+
 
 # Define a function to scrape Google search results and create a dataframe
+from apify_client import ApifyClient
+import pandas as pd
+import streamlit as st
+
 @st.cache_data(show_spinner=False)
 def scrape_google(search):
     # Define the Apify API URL and the actor's name
     APIFY_API_URL = 'https://api.apify.com/v2'
     ACTOR_NAME = 'apify/google-search-scraper'
+
+    # Retrieve the Apify API key from Streamlit secrets
+    APIFY_API_KEY = 'apify_api_L01dAtczculILhxDMjpfCKYskPS7iJ2HQKTO'
+
+    # Initialize the ApifyClient with your API token
+    client = ApifyClient(APIFY_API_KEY)
 
     # Prepare the actor input
     run_input = {
@@ -74,6 +99,8 @@ def scrape_google(search):
     st.header("Scraped Data from SERP and SERP Links")
     #st.write(df)
     return df
+
+
 
 @st.cache_data(show_spinner=False)
 def scrape_article(url):
@@ -141,6 +168,7 @@ def main(query):
         keyness_results = analyze_text(text)
         df.at[index, 'Keyness Results'] = keyness_results
     # Return the final dataframe
+    #df.to_csv("NLP_Data_On_SERP_Links_Text.csv")
     return df
 
 
@@ -192,6 +220,10 @@ def analyze_serps(query):
         df.at[index, 'POS Tags'] = ', '.join([f'{token}/{tag}' for token, tag in pos_tags])
         # Replace any remaining commas with spaces in the Article Text column
         df.at[index, 'Article Text'] = ' '.join(row['Article Text'].replace(',', ' ').split())
+    # Save the final dataframe as an Excel file
+    #writer = pd.ExcelWriter('NLP_Based_SERP_Results.xlsx', engine='xlsxwriter')
+    #df.to_excel(writer, sheet_name='Sheet1', index=False)
+    #writer.save()
     st.write(df)
     # Return the final dataframe
     return df
@@ -237,6 +269,14 @@ def summarize_nlp(df):
     # Calculate the top 20% of most frequent quadgrams
     top_quadgrams = ', '.join([quadgram[0] for quadgram in quadgram_freqs.most_common(int(len(quadgram_freqs) * 0.2))])
     
+    #print(f'Total results: {total_results}')
+    #print(f'Average article length: {avg_length} characters')
+    #print(f'Median words per article: {median_words}')
+    #print(f'Most common words: {top_words} ({len(word_freqs)} total words)')
+    #print(f'Most common bigrams: {top_bigrams} ({len(bigram_freqs)} total bigrams)')
+    #print(f'Most common trigrams: {top_trigrams} ({len(trigram_freqs)} total trigrams)')
+    #print(f'Most common quadgrams: {top_quadgrams} ({len(quadgram_freqs)} total quadgrams)')
+    #print(f'Most common part-of-speech tags: {all_tags}')
     summary = ""
     summary += f'Résultats totaux : {total_results}\n'
     summary += f'Longueur moyenne des articles : {avg_length} characters\n'
@@ -245,6 +285,9 @@ def summarize_nlp(df):
     summary += f'Most common bigrams: {top_bigrams} ({len(bigram_freqs)} total bigrams)\n'
     summary += f'Most common trigrams: {top_trigrams} ({len(trigram_freqs)} total trigrams)\n'
     summary += f'Most common quadgrams: {top_quadgrams} ({len(quadgram_freqs)} total quadgrams)\n'
+    #summary += f'Tags les plus courants {all_tags} )\n'
+    #summary = '\n'.join(summary)
+    #st.markdown(str(summary))
     return summary
 
 
@@ -286,6 +329,9 @@ def generate_content(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature
 @st.cache_data(show_spinner=False)
 def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature=0.4):
     prompt = truncate_to_token_length(prompt,2500)
+    #st.write(prompt)
+    #for i in range(3):
+        #try:
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
@@ -299,10 +345,21 @@ def generate_content2(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
     response = gpt_response['choices'][0]['message']['content'].strip()
     response = response
     return response
-  
+
+        #except:
+            #st.write(f"Attempt {i+1} failed, retrying...")
+            #time.sleep(3)  # Wait for 3 seconds before next try
+
+    #st.write("OpenAI is currently overloaded, please try again later.")
+    #return None
+
+    
 @st.cache_data(show_spinner=False)
 def generate_content3(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperature=0.4):
     prompt = truncate_to_token_length(prompt,2500)
+    #st.write(prompt)
+    #for i in range(3):
+        #try:
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
@@ -322,6 +379,8 @@ def generate_content3(prompt, model="gpt-3.5-turbo", max_tokens=1000, temperatur
 @st.cache_data(show_spinner=False)
 def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", max_tokens=2000, temperature=0.4):
     prompt = truncate_to_token_length(prompt,1500)
+    #for i in range(3):
+        #try:
     gpt_response = openai.ChatCompletion.create(
         model=model,
         messages=[
@@ -337,19 +396,29 @@ def generate_semantic_improvements_guide(prompt,query, model="gpt-3.5-turbo", ma
     response = gpt_response['choices'][0]['message']['content'].strip()
     st.header("Semantic Improvements Guide")
     st.markdown(response,unsafe_allow_html=True)
-    return str(response) 
+    return str(response)
+
+        #except:
+            #st.write(f"Attempt {i+1} failed, retrying...")
+            #time.sleep(3)  # Wait for 3 seconds before next try
+
+    #st.write("OpenAI is currently overloaded, please try again later.")
+    #return None
+    
    
 
 @st.cache_data(show_spinner=False)
 def generate_outline(topic, model="gpt-3.5-turbo", max_tokens=1500):
     prompt = f"Créez un plan d'article très complet pour le sujet : {topic}. Envisagez tous les angles possibles et soyez aussi exhaustif que possible. Veuillez utiliser des chiffres romains pour chaque section."
     outline = generate_content(prompt, model=model, max_tokens=max_tokens)
+    #save_to_file("outline.txt", outline)
     return outline
 
 @st.cache_data(show_spinner=False)
 def improve_outline(outline, semantic_readout, model="gpt-3.5-turbo", max_tokens=1500):
     prompt = f"A partir du plan d'article suivant, veuillez l'améliorer et l'étendre autant que possible en gardant à l'esprit les mots-clés SEO et les données fournies dans notre lecture sémantique. N'incluez pas de section sur le référencement sémantique lui-même, vous utilisez la lecture pour mieux informer votre création de l'ébauche. Essayez de l'inclure et de l'étendre autant que possible. Veuillez utiliser des chiffres romains pour chaque section. L'objectif est d'obtenir un aperçu aussi complet, clair et utile que possible, en explorant le sujet de manière aussi approfondie que possible. Réfléchissez étape par étape avant de répondre. Veuillez prendre en considération la lecture sémantique du référencement fournie ici : {semantic_readout} qui devrait vous aider à déterminer certaines des améliorations que vous pouvez apporter, bien que vous puissiez également envisager des améliorations supplémentaires qui ne sont pas incluses dans cette lecture sémantique du référencement.  Schéma à améliorer : {outline}."
     improved_outline = generate_content(prompt, model=model, max_tokens=max_tokens)
+    #save_to_file("improved_outline.txt", improved_outline)
     return improved_outline
 
 
@@ -387,8 +456,14 @@ def improve_section(section, i, model="gpt-3.5-turbo", max_tokens=1500):
     prompt = f"Étant donné la section suivante de l'article : {section}, veuillez apporter des améliorations à cette section. Conservez toute hiérarchie que vous trouvez. Fournissez uniquement la section mise à jour, pas le texte de votre recommandation, faites simplement les changements. Fournissez toujours la section mise à jour en Markdown valide s'il vous plaît. Section mise à jour avec améliorations :"
     prompt = str(prompt)
     improved_section = generate_content2(prompt, model=model, max_tokens=max_tokens)
+    #st.markdown(improved_section)
     st.markdown(improved_section,unsafe_allow_html=True)
     return " ".join(improved_section)  # join the lines into a single string
+
+
+
+
+
 
 @st.cache_data(show_spinner=False)
 def concatenate_files(file_names, output_file_name):
@@ -403,6 +478,8 @@ def concatenate_files(file_names, output_file_name):
 
     #print("Final draft created.\n")
     return final_draft
+
+
 
 @st.cache_data(show_spinner=False)
 def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_tokens_section=2000, max_tokens_improve_section=4000):
@@ -436,8 +513,14 @@ def generate_article(topic, model="gpt-3.5-turbo", max_tokens_outline=2000, max_
         time.sleep(5)
         improved_sections.append(improve_section(section_string, i, model=model, max_tokens=1200))
 
+
+
     status.text('Fini')
     final_content = '\n'.join(improved_sections)
+    #st.markdown(final_content,unsafe_allow_html=True)
+   
+
+
 
 
 def main():
